@@ -8,7 +8,7 @@
 lib.name = stream
 
 # input source file (class name == source file basename)
-class.sources = mp3cast~.c #mp3amp~.c #netreceive~.c oggamp~.c oggcast~.c oggread~.c oggwrite~.c pdogg.c #netsend~.c ffmpegWrite.cpp
+class.sources = mp3cast~.c mp3amp~.c oggamp~.c oggcast~.c #netreceive~.c oggread~.c oggwrite~.c pdogg.c #netsend~.c ffmpegWrite.cpp
 
 # build for 64 bit only
 # arch := x86_64
@@ -19,7 +19,7 @@ endef
 CPPFLAGS += -Iinclude
 
 # link to dynlibs
-ldlibs = -lmp3lame
+ldlibs = -lmp3lame -lvorbis
 
 # all extra files to be included in binary distribution of the library
 # datafiles = mp3cast~-help.pd README.txt LICENSE.txt
