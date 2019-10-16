@@ -13,7 +13,7 @@ class.sources = mp3cast~.c mp3amp~.c oggamp~.c oggcast~.c #netreceive~.c oggread
 # build for 64 bit only
 # arch := x86_64
 define forDarwin
-cflags = -mmacosx-version-min=10.14
+cflags = -mmacosx-version-min=10.14 -arch x86_64
 endef
 
 CPPFLAGS += -Iinclude
