@@ -209,8 +209,8 @@ static void mp3cast_encode(t_mp3cast *x)
 static void mp3cast_stream(t_mp3cast *x)
 {
     int err = -1, i;            /* error return code */
-    struct frame hframe;
-
+    // struct frame hframe; /* getting following error when building -> mp3cast~.c:212:18: error: variable has incomplete type 'struct frame' struct frame hframe; mp3cast~.c:212:12: note: forward declaration of 'struct frame'*/ struct frame hframe; */
+    
     err = send(x->x_fd, x->x_mp3outbuf, x->x_mp3size, 0);
     if(err < 0)
     {
