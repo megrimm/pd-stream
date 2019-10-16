@@ -99,7 +99,7 @@ typedef struct _mp3cast
     unsigned short x_inp;     /* in position for buffer */
     unsigned short x_outp;    /* out position for buffer*/
     short *x_mp3inbuf;        /* data to be sent to LAME */
-    char *x_mp3outbuf;        /* data returned by LAME -> our mp3 stream */
+    unsigned char *x_mp3outbuf;        /* data returned by LAME -> our mp3 stream */
     short *x_buffer;          /* data to be buffered */
     int x_bytesbuffered;      /* number of unprocessed bytes in buffer */
     int x_start;
@@ -112,14 +112,14 @@ typedef struct _mp3cast
 
     /* SHOUTcast server stuff */
     int x_fd;                 /* info about connection status */
-    char* x_passwd;           /* password for server */
+    const char* x_passwd;           /* password for server */
     int x_icecast;            /* tells if we use a IceCast server or SHOUTcast */
     /* special IceCast server stuff */
-    char* x_mountpoint;
-    char* x_name;
-    char* x_url;
-    char* x_genre;
-    char* x_description;
+    const char* x_mountpoint;
+    const char* x_name;
+    const char* x_url;
+    const char* x_genre;
+    const char* x_description;
     int x_isPublic;
 
     t_float x_f;              /* float needed for signal input */
@@ -133,7 +133,7 @@ typedef struct _mp3cast
 static void mp3cast_encode(t_mp3cast *x)
 {
     unsigned short i, wp;
-    int err = -1;
+    // int err = -1; // warning: unused variable 'err' [-Wunused-variable]
     int n = x->x_lamechunk;
 
 #ifdef _WIN32
@@ -208,9 +208,15 @@ static void mp3cast_encode(t_mp3cast *x)
 /* stream mp3 to SHOUTcast server */
 static void mp3cast_stream(t_mp3cast *x)
 {
-    int err = -1, i;            /* error return code */
-    // struct frame hframe; /* getting following error when building -> mp3cast~.c:212:18: error: variable has incomplete type 'struct frame' struct frame hframe; mp3cast~.c:212:12: note: forward declaration of 'struct frame'*/ struct frame hframe; */
-    
+    int err = -1;            /* error return code */
+	// int err = -1, i;            /* error return code */ warning: unused variable 'i' [-Wunused-variable]
+	
+	// getting following error when building -> 
+	// mp3cast~.c:212:18: error: variable has incomplete type 'struct frame' struct frame hframe; 
+	// mp3cast~.c:212:12: 
+	// note: forward declaration of 'struct frame'
+    //struct frame hframe;
+
     err = send(x->x_fd, x->x_mp3outbuf, x->x_mp3size, 0);
     if(err < 0)
     {
@@ -757,11 +763,11 @@ static void mp3cast_connect(t_mp3cast *x, t_symbol *hostname, t_floatarg fportno
 /* close connection to SHOUTcast server */
 static void mp3cast_disconnect(t_mp3cast *x)
 {
-    int err = -1;
+    // int err = -1; // warning: unused variable 'err' [-Wunused-variable]
     if(x->x_lame >= 0)
     {
         /* ignore remaining bytes */
-        if ( x->x_mp3size = lame_encode_flush( x->lgfp, x->x_mp3outbuf, 0) < 0 )
+        if ( x->x_mp3size == lame_encode_flush( x->lgfp, x->x_mp3outbuf, 0) < 0 )
         {
             post( "mp3cast~ : warning : remaining encoded bytes" );
         }
