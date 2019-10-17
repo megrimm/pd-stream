@@ -18,4 +18,13 @@ NOTES
 
 after running pd-osx-deps.sh you may have errors depending on how the .dynlib was compiled. Run otool to get some info on .dynlib like so:
 
+macOS
 $ otool -hV libmp3lame.0.dylib 
+
+Also to figure out what .dylib is link to a binary:
+
+Linux
+$ ldd <binary>
+
+macOS
+$ otool -L <binary>
