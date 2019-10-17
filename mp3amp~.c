@@ -284,7 +284,7 @@ static int mp3amp_decode_input(t_mp3amp *x)
     {
 
         ret = decodeMP3(&mps[x->x_instance], (unsigned char*)(x->x_inbuffer+x->x_offset),
-                        hframe.framesize+sizeof( unsigned long), (char *) p, sizeof(x->x_out), &pbytes);
+                        hframe.framesize+sizeof(unsigned long), (char *) p, sizeof(x->x_out), ((int *)&pbytes));
 
         switch (ret)
         {
