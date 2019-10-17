@@ -1104,7 +1104,7 @@ static void mp3amp_connect_url(t_mp3amp *x, t_symbol *url)
     post( "mp3amp~ : connect url : %s", url->s_name );
 
     /* strip http:// or ftp:// */
-    p = url->s_name;
+    p = ((char*)url->s_name);
     if (strncmp(p, "http://", 7) == 0)
         p += 7;
 
