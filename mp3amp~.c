@@ -220,7 +220,7 @@ static int strip_ice_header(char *head, int n)
 
 static void mp3amp_tilde_mpglib_init(t_mp3amp *x)
 {
-    int ret;
+	//int ret; //warning: unused variable 'ret' [-Wunused-variable]
 
     InitMP3(&mps[x->x_instance]);
 }
@@ -229,7 +229,7 @@ static int mp3amp_decode_input(t_mp3amp *x)
 {
     t_int i;
     t_int alength = 0;
-    float resample = 0;
+    // float resample = 0; // warning: unused variable 'resample' [-Wunused-variable]
     struct frame hframe;
     unsigned int a,b,c,d;
     unsigned long cheader;
@@ -401,8 +401,9 @@ static int mp3amp_decode_input(t_mp3amp *x)
 
 static void mp3amp_recv(t_mp3amp *x)
 {
-    int ret, i;
-    float resample = 0;
+    int ret; // warning: unused variable 'i' [-Wunused-variable]
+	// int ret, i; // warning: unused variable 'i' [-Wunused-variable]
+    // float resample = 0; // warning: unused variable 'resample' [-Wunused-variable]
     struct frame hframe;
     unsigned int a,b,c,d;
     unsigned long cheader;
@@ -497,8 +498,8 @@ static t_int *mp3amp_perform(t_int *w)
     t_float *out1 = (t_float *)(w[2]);
     t_float *out2 = (t_float *)(w[3]);
     int n = (int)(w[4]);
-    int ret;
-    int i = 0;
+    // int ret; // warning: unused variable 'ret' [-Wunused-variable]
+    // int i = 0; // warning: unused variable 'i' [-Wunused-variable]
 
     x->x_blocksize = n;
     x->x_nbwaitloops = LAME_AUDIO_CHUNK_SIZE/x->x_blocksize;
@@ -611,8 +612,10 @@ static void *mp3amp_do_connect(void *tdata )
     fd_set          fdset;
     struct timeval  tv;
     t_int           sockfd;                         /* socket to server */
-    t_int           relocate, numrelocs = 0;
-    t_int           i, ret, rest, nanswers=0;
+    t_int           relocate = 0; // warning: unused variable 'numrelocs' [-Wunused-variable]
+	// t_int           relocate, numrelocs = 0; // warning: unused variable 'numrelocs' [-Wunused-variable]
+	t_int           i, ret;
+    // t_int           i, ret, rest, nanswers=0; // warning: unused variable 'nanswers' [-Wunused-variable] && warning: unused variable 'rest' [-Wunused-variable]
     char            *cpoint = NULL;
     t_int           offset = 0, endofheaders = 0;
 
@@ -727,7 +730,7 @@ static void *mp3amp_do_connect(void *tdata )
     if ( strstr(request, "HTTP") )    /* seems to be IceCast server */
     {
         strip_ice_header(request, STRBUF_SIZE);
-        if(sptr = strstr(request, "302"))
+        if(sptr == (strstr(request, "302")))
         {
             cpoint = NULL;
             cpoint = strstr(request, "Location:");
@@ -757,7 +760,7 @@ static void *mp3amp_do_connect(void *tdata )
         // post("mp3amp~: server's header : %s", request );
 
         // check what we got
-        if( cpoint = strstr(request, "x-audiocast-mount:"))
+        if( cpoint == (strstr(request, "x-audiocast-mount:")))
         {
             x->x_mountpoint = strdup(cpoint + 18);
             for ( i=0; i<(int)strlen(x->x_mountpoint); i++ )
@@ -770,7 +773,7 @@ static void *mp3amp_do_connect(void *tdata )
             }
             post("           mountpoint: %s", x->x_mountpoint);
         }
-        if( cpoint = strstr(request, "x-audiocast-server-url:"))
+        if( cpoint == (strstr(request, "x-audiocast-server-url:")))
         {
             sptr = strdup( cpoint + 24);
             for ( i=0; i<(int)strlen(sptr); i++ )
@@ -783,7 +786,7 @@ static void *mp3amp_do_connect(void *tdata )
             }
             post("           server-url: %s", sptr);
         }
-        if( cpoint = strstr(request, "x-audiocast-location:"))
+        if( cpoint == (strstr(request, "x-audiocast-location:")))
         {
             sptr = strdup( cpoint + 22);
             for ( i=0; i<(int)strlen(sptr); i++ )
@@ -796,7 +799,7 @@ static void *mp3amp_do_connect(void *tdata )
             }
             post("           location: %s", sptr);
         }
-        if( cpoint = strstr(request, "x-audiocast-admin:"))
+        if( cpoint == (strstr(request, "x-audiocast-admin:")))
         {
             sptr = strdup( cpoint + 19);
             for ( i=0; i<(int)strlen(sptr); i++ )
@@ -809,7 +812,7 @@ static void *mp3amp_do_connect(void *tdata )
             }
             post("           admin: %s", sptr);
         }
-        if( cpoint = strstr(request, "x-audiocast-name:"))
+        if( cpoint == (strstr(request, "x-audiocast-name:")))
         {
             x->x_bcname = strdup( cpoint + 17);
             for ( i=0; i<(int)strlen(x->x_bcname); i++ )
@@ -822,7 +825,7 @@ static void *mp3amp_do_connect(void *tdata )
             }
             post("           name: %s", x->x_bcname);
         }
-        if( cpoint = strstr(request, "x-audiocast-genre:"))
+        if( cpoint == (strstr(request, "x-audiocast-genre:")))
         {
             x->x_bcgenre = strdup( cpoint + 18);
             for ( i=0; i<(int)strlen(x->x_bcgenre); i++ )
@@ -835,7 +838,7 @@ static void *mp3amp_do_connect(void *tdata )
             }
             post("           genre: %s", x->x_bcgenre);
         }
-        if( cpoint = strstr(request, "x-audiocast-url:"))
+        if( cpoint == (strstr(request, "x-audiocast-url:")))
         {
             x->x_bcurl = strdup( cpoint + 16);
             for ( i=0; i<(int)strlen(x->x_bcurl); i++ )
@@ -848,15 +851,15 @@ static void *mp3amp_do_connect(void *tdata )
             }
             post("           url: %s", x->x_bcurl);
         }
-        if( cpoint = strstr(request, "x-audiocast-public:1"))
+        if( cpoint == (strstr(request, "x-audiocast-public:1")))
         {
             post("           broadcast is public");
         }
-        else if( cpoint = strstr(request, "x-audiocast-public:0"))
+        else if( cpoint == (strstr(request, "x-audiocast-public:0")))
         {
             post("           broadcast is NOT public");
         }
-        if( cpoint = strstr(request, "x-audiocast-bitrate:"))
+        if( cpoint == (strstr(request, "x-audiocast-bitrate:")))
         {
             sptr = strdup( cpoint + 20);
             for ( i=0; i<(int)strlen(sptr); i++ )
@@ -892,7 +895,7 @@ static void *mp3amp_do_connect(void *tdata )
             }
             post("           bitrate: %d", x->x_bitrate);
         }
-        if( cpoint = strstr(request, "x-audiocast-udpport:"))
+        if( cpoint == (strstr(request, "x-audiocast-udpport:")))
         {
             post("mp3amp~: sorry, server wants UDP connection!");
             return NULL;
@@ -914,7 +917,7 @@ static void *mp3amp_do_connect(void *tdata )
             i = ret;
             /* check what we got */
 
-            if( cpoint = strstr(request, "icy-name:"))
+            if( cpoint == (strstr(request, "icy-name:")))
             {
                 x->x_bcname = strdup( cpoint + 10);
                 for ( i=0; i<(int)strlen(x->x_bcname); i++ )
@@ -927,7 +930,7 @@ static void *mp3amp_do_connect(void *tdata )
                 }
                 post("           name: %s", x->x_bcname);
             }
-            if( cpoint = strstr(request, "x-audiocast-name:"))
+            if( cpoint == (strstr(request, "x-audiocast-name:")))
             {
                 x->x_bcname = strdup( cpoint + 18);
                 for ( i=0; i<(int)strlen(x->x_bcname); i++ )
@@ -940,7 +943,7 @@ static void *mp3amp_do_connect(void *tdata )
                 }
                 post("           name: %s", x->x_bcname);
             }
-            if( cpoint = strstr(request, "icy-genre:"))
+            if( cpoint == (strstr(request, "icy-genre:")))
             {
                 x->x_bcgenre = strdup( cpoint + 10);
                 for ( i=0; i<(int)strlen(x->x_bcgenre); i++ )
@@ -953,7 +956,7 @@ static void *mp3amp_do_connect(void *tdata )
                 }
                 post("           name: %s", x->x_bcname);
             }
-            if( cpoint = strstr(request, "icy-aim:"))
+            if( cpoint == (strstr(request, "icy-aim:")))
             {
                 x->x_bcaim = strdup( cpoint + 8);
                 for ( i=0; i<(int)strlen(x->x_bcaim); i++ )
@@ -966,7 +969,7 @@ static void *mp3amp_do_connect(void *tdata )
                 }
                 post("           name: %s", x->x_bcname);
             }
-            if( cpoint = strstr(request, "icy-url:"))
+            if( cpoint == (strstr(request, "icy-url:")))
             {
                 x->x_bcurl = strdup( cpoint + 8);
                 for ( i=0; i<(int)strlen(x->x_bcurl); i++ )
@@ -987,7 +990,7 @@ static void *mp3amp_do_connect(void *tdata )
             {
                 post("           broadcast is NOT public");
             }
-            if( cpoint = strstr(request, "icy-br:"))
+            if( cpoint == (strstr(request, "icy-br:")))
             {
                 sptr = strdup( cpoint + 7);
                 if(!strncmp(sptr, "320", 3))x->x_bitrate = 320;
