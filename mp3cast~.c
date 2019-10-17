@@ -767,7 +767,7 @@ static void mp3cast_disconnect(t_mp3cast *x)
     if(x->x_lame >= 0)
     {
         /* ignore remaining bytes */
-        if ( x->x_mp3size == lame_encode_flush( x->lgfp, x->x_mp3outbuf, 0) < 0 )
+        if ( ( x->x_mp3size == lame_encode_flush( x->lgfp, x->x_mp3outbuf, 0) ) < 0 )
         {
             post( "mp3cast~ : warning : remaining encoded bytes" );
         }
