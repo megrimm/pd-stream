@@ -246,7 +246,7 @@ char *oggcast_util_base64_encode(char *data)
 	/* check server for writeability */
 static int oggcast_checkserver(t_int sock)
 {
-    fd_set          fdset;
+    // fd_set          fdset;
     struct timeval  ztout;
 	fd_set writeset;
 	fd_set exceptset;
@@ -445,9 +445,11 @@ static void oggcast_vorbis_deinit(t_oggcast *x)
 }
 
 	/* encode ogg/vorbis and stream new data */
-static int oggcast_encode(t_oggcast *x, float *buf, int channels, int fifosize, int fd)
+static int oggcast_encode(t_oggcast *x, float *buf, int channels, int fd)
+// static int oggcast_encode(t_oggcast *x, float *buf, int channels, int fifosize, int fd)
 {
-    unsigned short i, ch;
+    unsigned short ch;
+	// unsigned short i, ch;
     int err = 0;
     int n, pages = 0;
 
@@ -500,7 +502,7 @@ static int oggcast_child_connect(char *hostname, char *mountpoint, t_int portno,
         /* variables used for communication with server */
     const char      * buf = 0;
     char            resp[STRBUF_SIZE];
-    unsigned int    len;
+    // unsigned int    len; // unused variable 'len'
     fd_set          fdset;
     struct timeval  tv;
     t_int           sockfd;                         /* our internal handle for the socket */
@@ -765,7 +767,8 @@ static void *oggcast_child_main(void *zz)
 		else if (x->x_requestcode == REQUEST_CONNECT)
 		{
     		char boo[100];
-			int sysrtn, wantbytes;
+			int sysrtn;
+			// int sysrtn, wantbytes; // unused variable 'wantbytes'
 			
 	    		/* copy connect stuff out of the data structure so we can
 			relinquish the mutex while we're connecting to server. */
@@ -871,7 +874,8 @@ static void *oggcast_child_main(void *zz)
 					channels = x->x_channels;
 					fd = x->x_fd;
 	    			pthread_mutex_unlock(&x->x_mutex);
-					sysrtn = oggcast_encode(x, buf + fifotail, channels, fifosize, fd);
+					sysrtn = oggcast_encode(x, buf + fifotail, channels, fd);
+					//sysrtn = oggcast_encode(x, buf + fifotail, channels, fifosize, fd);
 	    			pthread_mutex_lock(&x->x_mutex);
 					if (x->x_requestcode != REQUEST_BUSY &&
 	    					x->x_requestcode != REQUEST_CLOSE)
@@ -1074,7 +1078,7 @@ static void *oggcast_new(t_floatarg fnchannels, t_floatarg fbufsize)
 	x->x_mountpoint = "puredata.ogg";
 	x->x_servertype = 1;			/* HTTP/1.0 protocol for Icecast2 */
     
-    logpost(NULL, 4, oggcast_version);
+    logpost(NULL, 4, "%s", oggcast_version);
 	post("oggcast~: set buffer to %dk bytes", bufsize / 1024);
 	post("oggcast~: encoding %d channels @ %d Hz", x->x_channels, x->x_samplerate);
 
@@ -1167,7 +1171,8 @@ static void oggcast_disconnect(t_oggcast *x)
     connect <hostname or IP> <mountpoint> <portnumber>
     */
 
-static void oggcast_connect(t_oggcast *x, t_symbol *s, int argc, t_atom *argv)
+static void oggcast_connect(t_oggcast *x, int argc, t_atom *argv)
+// static void oggcast_connect(t_oggcast *x, t_symbol *s, int argc, t_atom *argv) //
 {
     t_symbol *hostsym = atom_getsymbolarg(0, argc, argv);
     t_symbol *mountsym = atom_getsymbolarg(1, argc, argv);
@@ -1184,8 +1189,8 @@ static void oggcast_connect(t_oggcast *x, t_symbol *s, int argc, t_atom *argv)
 	else
 	{
 		x->x_requestcode = REQUEST_CONNECT;
-		x->x_hostname = hostsym->s_name;
-		x->x_mountpoint = mountsym->s_name;
+		x->x_hostname = ((char*)hostsym->s_name);
+		x->x_mountpoint = ((char*)mountsym->s_name);
 		x->x_port = portno;
 
 		x->x_fifotail = 0;
@@ -1246,7 +1251,7 @@ static void oggcast_dsp(t_oggcast *x, t_signal **sp)
 static void oggcast_password(t_oggcast *x, t_symbol *password)
 {
     pthread_mutex_lock(&x->x_mutex);
-    x->x_passwd = password->s_name;
+    x->x_passwd = ((char *)password->s_name);
     pthread_mutex_unlock(&x->x_mutex);
 }
     /* set comment fields for header (reads in just anything) */
