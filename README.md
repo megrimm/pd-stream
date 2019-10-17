@@ -11,4 +11,11 @@ $ make
 
 $ chmod 755 pd-osx-deps.sh
 
-$ ./osx_dependencies.sh
+$ ./pd-osx-deps.sh
+
+
+NOTES
+
+after running pd-osx-deps.sh you may have errors depending on how the .dynlib was compiled. Run otool to get some info on .dynlib like so:
+
+$ otool -hV libmp3lame.0.dylib 
