@@ -9,6 +9,6 @@ $ brew install lame && brew install mpg123
 
 $ make
 
-$ chmod 755 osx_dependencies.sh
+$ chmod 755 pd-osx-deps.sh
 
 $ ./osx_dependencies.sh
