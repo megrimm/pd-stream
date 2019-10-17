@@ -16,6 +16,9 @@ $ ./pd-osx-deps.sh
 
 NOTES
 
+mp3amp~ complaining of "Symbol not found: _ExitMP3", "Symbol not found: _freqs", etc. I am assuming here that mpglib must be installed but with homebrew it is not available... hmmmm
+
+
 after running pd-osx-deps.sh you may have errors depending on how the .dynlib was compiled. Run otool to get some info on .dynlib like so:
 
 macOS
