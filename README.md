@@ -1,6 +1,6 @@
 # pd-stream
 streaming objects for puredata (Forked from various places)
- right now mp3cast~ but will be more maybe
+ right now mp3cast~ works but the others crash on me... go figure
 
 
 OSX Build
