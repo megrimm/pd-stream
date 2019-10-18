@@ -1,6 +1,6 @@
 # pd-stream
 streaming objects for puredata (Forked from various places)
- right now mp3cast~ works but the others crash on me... go figure
+ right now mp3cast~ works but mp3amp~ wont create and the oog externals crash on me... go figure
 
 
 OSX Build
