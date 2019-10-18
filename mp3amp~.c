@@ -313,10 +313,10 @@ static int mp3amp_decode_input(t_mp3amp *x)
                     if ( x->x_outunread >= MIN_AUDIO_INPUT && !x->x_stream )
                     {
                         post("mp3amp~: stream connected" );
-                        x->x_resample = x->x_samplerate / freqs[hframe.sampling_frequency];
+                        	x->x_resample = x->x_samplerate / freqs[hframe.sampling_frequency];
                         if ( x->x_resample == 0 ) x->x_resample=1;
                         post("mp3amp~: resampling stream from %d to %d Hz (r=%d)",
-                             freqs[hframe.sampling_frequency], x->x_samplerate, x->x_resample );
+							freqs[hframe.sampling_frequency], x->x_samplerate, x->x_resample );
                         x->x_stream = 1;
                     }
 					
