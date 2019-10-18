@@ -200,7 +200,7 @@ static int oggamp_check_for_data(t_int sock)
 static int oggamp_child_receive(int fd, char *buffer, int size)
 {
 	int   ret = -1;
-	int   i;
+	//int   i;
  
 	ret = recv(fd, buffer, size, 0);
 	if(ret < 0)
@@ -496,13 +496,14 @@ static int oggamp_child_connect(char *hostname, char *mountpoint, t_int portno)
         /* variables used for communication with server */
     char            *sptr = NULL;
     char            request[STRBUF_SIZE];           /* string to be send to server */
-	char            *url;               /* used for relocation */
+	// char            *url;               /* used for relocation */
     fd_set          fdset;
     struct timeval  tv;
     t_int           sockfd;                         /* socket to server */
-    t_int           relocate, numrelocs = 0;
-    t_int           i, ret, rest, nanswers=0;
-    char            *cpoint = NULL;
+    // t_int           relocate, numrelocs = 0;
+    t_int           i, ret=0;
+	// t_int           i, ret, rest, nanswers=0;
+    // char            *cpoint = NULL;
 	t_int           eof = 0;
 
     sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -606,11 +607,11 @@ static int oggamp_child_connect(char *hostname, char *mountpoint, t_int portno)
 			}
 			request[i] = '\0';	/* make it a null terminated string */
 
-			if(sptr = strstr(request, "application/x-ogg")) 
+			if(sptr == strstr(request, "application/x-ogg")) 
 			{		/* check for content type */
 				post("oggamp~: Ogg Vorbis stream found");
 			}
-			if(sptr = strstr(request, "ice-name:")) 
+			if(sptr == strstr(request, "ice-name:")) 
 			{		/* display ice-name */
 				post("oggamp~: \"%s\"", sptr + 10);
 			}
@@ -727,7 +728,7 @@ static void *oggamp_child_main(void *zz)
     while (1)
     {
     	int fd, fifohead;
-		char *buffer;	/* Ogg Vorbis data */
+		// char *buffer;	/* Ogg Vorbis data */
 		float *buf;		/* encoded PCM floats */
 		pute("0\n");
 		if (x->x_requestcode == REQUEST_NOTHING)
@@ -741,7 +742,8 @@ static void *oggamp_child_main(void *zz)
 		else if (x->x_requestcode == REQUEST_CONNECT)
 		{
     			char boo[80];
-			int sysrtn, wantbytes;
+			int sysrtn;
+			// int sysrtn, wantbytes;
 			
 	    		/* copy connect stuff out of the data structure so we can
 			relinquish the mutex while we're in oggcast_child_connect(). */
@@ -823,7 +825,7 @@ static void *oggamp_child_main(void *zz)
 	    		(x->x_streamchannels * 2));
 				/* arrange for the "request" condition to be signalled x->x_siginterval
 				times per buffer */
-    		sprintf(boo, "fifosize %d\n", 
+    		sprintf(boo, "fifosize %ld\n", 
     	    	x->x_fifosize);
     		pute(boo);
 			x->x_sigcountdown = x->x_sigperiod = (x->x_fifosize / (x->x_siginterval * x->x_noutlets * x->x_vecsize));
@@ -840,7 +842,7 @@ static void *oggamp_child_main(void *zz)
 				there is some space at end of buffer */
 				if(x->x_fifobytes < fifosize - READSIZE)
 				{
-		    		sprintf(boo, "head %d, tail %d\n", x->x_fifohead, x->x_fifotail);
+		    		sprintf(boo, "head %ld, tail %ld\n", x->x_fifohead, x->x_fifotail);
 					pute(boo);
 
 					/* we pass x on to the routine since we need the ogg vorbis stuff
@@ -880,7 +882,7 @@ static void *oggamp_child_main(void *zz)
 					}
 					x->x_fifohead = (fifohead + sysrtn) % fifosize;
 					x->x_fifobytes += sysrtn;
-    	    		sprintf(boo, "after: head %d, tail %d\n", 
+    	    		sprintf(boo, "after: head %ld, tail %ld\n", 
     	    			x->x_fifohead, x->x_fifotail);
     	    		pute(boo);
 						/* check wether the buffer is filled enough to start streaming */
@@ -1056,7 +1058,7 @@ static void *oggamp_new(t_floatarg fdographics, t_floatarg fnchannels, t_floatar
     x->x_graphic = (int)fdographics;
     x->x_canvas = canvas_getcurrent(); 
     
-    logpost(NULL, 4, oggamp_version);
+    logpost(NULL, 4, "%s", oggamp_version);
 	post("oggamp~: set buffer to %dk bytes", bufsize/1024);
 
 		/* start child thread */
@@ -1067,13 +1069,15 @@ static void *oggamp_new(t_floatarg fdographics, t_floatarg fnchannels, t_floatar
 static t_int *oggamp_perform(t_int *w)
 {
     t_oggamp *x = (t_oggamp *)(w[1]);
-    t_int vecsize = x->x_vecsize, noutlets = x->x_noutlets, i, j, r;
+    t_int vecsize = x->x_vecsize, noutlets = x->x_noutlets, i, j;
+	// t_int vecsize = x->x_vecsize, noutlets = x->x_noutlets, i, j, r;
     t_float *fp;
 	t_float *buffer = x->x_buf;
 
     if (x->x_state == STATE_STREAM)
     {
-    	t_int wantbytes, getbytes, havebytes, nchannels, streamchannels = x->x_streamchannels;
+    	t_int wantbytes, havebytes = x->x_streamchannels;
+		// t_int wantbytes, getbytes, havebytes, nchannels, streamchannels = x->x_streamchannels;
 
 		pthread_mutex_lock(&x->x_mutex);
 
@@ -1087,7 +1091,7 @@ static t_int *oggamp_perform(t_int *w)
 		{
 			if(x->x_connecterror)
 			{		/* report error and close connection */
-	    		pd_error(x, "dsp: error %d", x->x_connecterror);
+	    		pd_error(x, "dsp: error %ld", x->x_connecterror);
 				x->x_state = STATE_IDLE;
 				x->x_requestcode = REQUEST_CLOSE;
 				x->x_disconnect = 1;
@@ -1175,7 +1179,8 @@ static void oggamp_disconnect(t_oggamp *x)
     connect <hostname or IP> <mountpoint> <portnumber>
     */
 
-static void oggamp_connect(t_oggamp *x, t_symbol *s, int argc, t_atom *argv)
+static void oggamp_connect(t_oggamp *x, int argc, t_atom *argv)
+	// static void oggamp_connect(t_oggamp *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_symbol *hostsym = atom_getsymbolarg(0, argc, argv);
     t_symbol *mountsym = atom_getsymbolarg(1, argc, argv);
@@ -1187,8 +1192,8 @@ static void oggamp_connect(t_oggamp *x, t_symbol *s, int argc, t_atom *argv)
     pthread_mutex_lock(&x->x_mutex);
 	if(x->x_fd == -1)
 	{
-		x->x_hostname = hostsym->s_name;
-		x->x_mountpoint = mountsym->s_name;
+		x->x_hostname = ((char *)hostsym->s_name);
+		x->x_mountpoint = ((char *)mountsym->s_name);
 		x->x_port = portno;
 		x->x_requestcode = REQUEST_CONNECT;
 			/* empty buffer */
@@ -1221,7 +1226,7 @@ static void oggamp_connect_url(t_oggamp *x, t_symbol *url)
 	t_int portno;
 
 		/* strip http:// or ftp:// */
-	p = url->s_name;
+	p = ((char *)url->s_name);
 	if (strncmp(p, "http://", 7) == 0)
 		p += 7;
 
@@ -1282,7 +1287,7 @@ static void oggamp_connect_url(t_oggamp *x, t_symbol *url)
 	for (p = p0; *p && isdigit((unsigned char) *p); p++) ;
 
 	*p = '\0';
-	port = (unsigned char *) p0;
+	port = p0;
 		/* convert port from string to int */
 	portno = (int)strtol(port, NULL, 10);
 	freebytes(p0, stringlength + 1);
