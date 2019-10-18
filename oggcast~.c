@@ -601,7 +601,7 @@ static int oggcast_child_connect(char *hostname, char *mountpoint, t_int portno,
 			/* bitrate */
 		buf = "\r\nice-bitrate: ";
 		send(sockfd, buf, strlen(buf), SEND_OPT);
-		if(sprintf(resp, "%d", br_nom) == -1)    /* convert int to a string */
+		if(sprintf(resp, "%ld", br_nom) == -1)    /* convert int to a string */
 		{
 			error("oggcast~: wrong bitrate");
 		}
@@ -669,7 +669,7 @@ static int oggcast_child_connect(char *hostname, char *mountpoint, t_int portno,
 			/* bitrate */
 		buf = "\r\nice-bitrate: ";
 		send(sockfd, buf, strlen(buf), SEND_OPT);
-		if(sprintf(resp, "%d", br_nom) == -1)    /* convert int to a string */
+		if(sprintf(resp, "%ld", br_nom) == -1)    /* convert int to a string */
 		{
 			error("oggcast~: wrong bitrate");
 		}
@@ -754,7 +754,7 @@ static void *oggcast_child_main(void *zz)
     pthread_mutex_lock(&x->x_mutex);
     while (1)
     {
-    	int fd, fifotail;
+		int fd, fifotail;
 		pute("0\n");
 		if (x->x_requestcode == REQUEST_NOTHING)
 		{
@@ -770,7 +770,7 @@ static void *oggcast_child_main(void *zz)
 			int sysrtn;
 			// int sysrtn, wantbytes; // unused variable 'wantbytes'
 			
-	    		/* copy connect stuff out of the data structure so we can
+	    	/* copy connect stuff out of the data structure so we can
 			relinquish the mutex while we're connecting to server. */
 			char *hostname = x->x_hostname;
 			char *mountpoint = x->x_mountpoint;
@@ -845,7 +845,7 @@ static void *oggcast_child_main(void *zz)
 				x->x_fifosize = x->x_bufsize - (x->x_bufsize % (x->x_channels * READ));
 					/* arrange for the "request" condition to be signalled x->x_siginterval
 					times per buffer */
-    			sprintf(boo, "fifosize %d\n", x->x_fifosize);
+    			sprintf(boo, "fifosize %ld\n", x->x_fifosize);
     			pute(boo);
 				x->x_sigcountdown = x->x_sigperiod = (x->x_fifosize / (x->x_siginterval * x->x_channels * x->x_vecsize));
 			}
@@ -892,7 +892,7 @@ static void *oggcast_child_main(void *zz)
 						if (x->x_fifotail >= fifosize)
     	    	    				x->x_fifotail = 0;
     	    		}
-    	    		sprintf(boo, "after: head %d, tail %d, pages %d\n", x->x_fifohead, x->x_fifotail, sysrtn);
+    	    		sprintf(boo, "after: head %ld, tail %ld, pages %d\n", x->x_fifohead, x->x_fifotail, sysrtn);
 					pute(boo);
 				}
 				else	/* just wait... */
